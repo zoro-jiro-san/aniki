@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Aniki | Autonomous Agent Treasury Management</title>
+    <meta name="description" content="Complete documentation for Aniki autonomous agent treasury management system on Sui blockchain.">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4FC3F7;
+            --secondary-color: #29B6F6;
+            --accent-color: #0277BD;
+            --text-primary: #212121;
+            --text-secondary: #424242;
+            --text-muted: #757575;
+            --background: #FAFAFA;
+            --surface: #FFFFFF;
+            --border: #E0E0E0;
+            --code-bg: #1a1a1a;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--background);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Main Layout */
+        .main {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            padding: 2rem 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .sidebar h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: 6px;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Content */
+        .content {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .content h1 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .content h2 {
+            color: var(--text-primary);
+            margin: 2rem 0 1rem;
+            font-size: 1.8rem;
+        }
+
+        .content h3 {
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem;
+            font-size: 1.4rem;
+        }
+
+        .content p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+
+        .content li {
+            margin-bottom: 0.25rem;
+            color: var(--text-secondary);
+        }
+
+        /* Code blocks */
+        .content pre {
+            background: var(--code-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid #333;
+        }
+
+        .content code {
+            background: #f5f5f5;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-color);
+            font-size: 0.9rem;
+        }
+
+        .content pre code {
+            background: none;
+            padding: 0;
+            color: #e0e0e0;
+        }
+
+        /* Tables */
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .content th, .content td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .content th {
+            background: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .content tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        /* Alert boxes */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+        }
+
+        .alert.info {
+            background: #e3f2fd;
+            border-color: var(--primary-color);
+            color: #0277bd;
+        }
+
+        .alert.warning {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #f57c00;
+        }
+
+        .alert.success {
+            background: #e8f5e8;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        .alert.error {
+            background: #ffebee;
+            border-color: #f44336;
+            color: #d32f2f;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .sidebar {
+                position: relative;
+                top: 0;
+            }
+
+            .content {
+                padding: 1.5rem;
+            }
+
+            .content h1 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shield-alt" style="color: var(--primary-color);"></i>
+                Aniki
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="docs.html" style="color: var(--primary-color);">Docs</a></li>
+                <li><a href="https://github.com/your-username/aniki" target="_blank">
+                    <i class="fab fa-github"></i> GitHub
+                </a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <main class="main">
+            <!-- Sidebar Navigation -->
+            <aside class="sidebar">
+                <h3>Documentation</h3>
+                <ul>
+                    <li><a href="#overview" class="active">Overview</a></li>
+                    <li><a href="#installation">Installation</a></li>
+                    <li><a href="#quick-start">Quick Start</a></li>
+                    <li><a href="#configuration">Configuration</a></li>
+                    <li><a href="#security">Security</a></li>
+                    <li><a href="#api-reference">API Reference</a></li>
+                    <li><a href="#examples">Examples</a></li>
+                    <li><a href="#deployment">Deployment</a></li>
+                    <li><a href="#troubleshooting">Troubleshooting</a></li>
+                    <li><a href="#contributing">Contributing</a></li>
+                </ul>
+            </aside>
+
+            <!-- Content Area -->
+            <section class="content">
+                <h1 id="overview">Aniki Documentation</h1>
+                
+                <p>Welcome to the complete documentation for Aniki (兄貴), an autonomous agent treasury management system built on Sui blockchain. This guide will help you integrate Aniki into your projects and leverage its powerful security and automation features.</p>
+
+                <div class="alert info">
+                    <strong>OpenClaw Hackathon Entry</strong> - This project is part of the OpenClaw Hackathon 2026. Deadline: February 11, 2026.
+                </div>
+
+                <h2 id="installation">Installation</h2>
+                
+                <p>Aniki requires Node.js 18+ and access to a Sui network (devnet, testnet, or mainnet).</p>
+
+                <h3>Prerequisites</h3>
+                <pre><code class="language-bash"># Install Sui CLI
+cargo install --locked --git https://github.com/MystenLabs/sui.git --branch devnet sui
+
+# Verify installation
+sui --version</code></pre>
+
+                <h3>Install Aniki</h3>
+                <pre><code class="language-bash"># Clone the repository
+git clone https://github.com/your-username/aniki.git
+cd aniki
+
+# Install dependencies
+npm install
+
+# Build the project
+npm run build</code></pre>
+
+                <h2 id="quick-start">Quick Start</h2>
+
+                <p>Get started with Aniki in under 5 minutes:</p>
+
+                <h3>1. Environment Setup</h3>
+                <pre><code class="language-bash"># Copy environment template
+cp .env.example .env
+
+# Edit .env with your configuration
+nano .env</code></pre>
+
+                <h3>2. Initialize Aniki</h3>
+                <pre><code class="language-typescript">import { Aniki } from '@aniki/core';
+
+const aniki = new Aniki({
+  network: 'devnet',
+  securityLevel: 'high',
+  rpcEndpoints: [
+    'https://fullnode.devnet.sui.io',
+    'https://sui-devnet.nodereal.io'
+  ]
+});
+
+// Initialize with security configuration
+await aniki.initialize({
+  coldWallet: '0x123...abc',  // Hardware wallet
+  hotWallet: '0x456...def',   // Hot wallet for daily ops
+  multiSigThreshold: {
+    signers: 3,
+    required: 2,
+    minAmount: 100000  // SUI units
+  }
+});</code></pre>
+
+                <h3>3. Spawn Your First Agent</h3>
+                <pre><code class="language-typescript">// Create a secure agent for portfolio management
+const agent = await aniki.spawnAgent({
+  task: 'Monitor DeFi positions and rebalance portfolio',
+  budget: 50000,  // 50K SUI units
+  securityLevel: 'standard',
+  autoApproval: {
+    maxTransaction: 10000,
+    dailyLimit: 25000
+  }
+});
+
+console.log(`Agent spawned: ${agent.id}`);
+console.log(`Budget allocated: ${agent.budget} SUI`);</code></pre>
+
+                <h2 id="configuration">Configuration</h2>
+
+                <p>Aniki offers extensive configuration options for different deployment scenarios:</p>
+
+                <h3>Security Configuration</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Description</th>
+                            <th>Default</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>securityLevel</code></td>
+                            <td>Overall security mode: low, standard, high, enterprise</td>
+                            <td>standard</td>
+                        </tr>
+                        <tr>
+                            <td><code>coldThreshold</code></td>
+                            <td>SUI amount requiring cold wallet approval</td>
+                            <td>100000</td>
+                        </tr>
+                        <tr>
+                            <td><code>hotThreshold</code></td>
+                            <td>Maximum hot wallet transaction amount</td>
+                            <td>10000</td>
+                        </tr>
+                        <tr>
+                            <td><code>multiSigRequired</code></td>
+                            <td>Enable multi-signature for critical operations</td>
+                            <td>true</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Network Configuration</h3>
+                <pre><code class="language-json">{
+  "network": "devnet",
+  "rpcEndpoints": [
+    "https://fullnode.devnet.sui.io",
+    "https://sui-devnet.nodereal.io",
+    "https://sui-devnet-endpoint.blockvision.org"
+  ],
+  "timeout": 30000,
+  "retries": 3,
+  "gasOptimization": {
+    "enabled": true,
+    "batchSize": 10,
+    "maxWaitTime": 5000
+  }
+}</code></pre>
+
+                <h2 id="security">Security Features</h2>
+
+                <p>Aniki implements multiple layers of security to protect your digital assets:</p>
+
+                <h3>Air-Gap Wallet Management</h3>
+                <p>Transactions above the configured threshold require cold wallet approval:</p>
+
+                <pre><code class="language-typescript">// Configure air-gap security
+await aniki.configureSecurity({
+  coldWallet: {
+    address: '0x123...abc',
+    type: 'hardware',  // hardware, offline, paper
+    approvalMethod: 'qr-code'  // qr-code, usb, manual
+  },
+  hotWallet: {
+    address: '0x456...def',
+    maxDaily: 50000,
+    maxTransaction: 10000
+  }
+});
+
+// High-value transaction triggers cold wallet flow
+const transaction = await aniki.createTransaction({
+  to: '0x789...xyz',
+  amount: 150000,  // > coldThreshold
+  memo: 'Large DeFi investment'
+});
+
+// Returns approval URL for cold wallet signing
+console.log(`Cold approval required: ${transaction.approvalUrl}`);</code></pre>
+
+                <h3>Multi-Signature Support</h3>
+                <pre><code class="language-typescript">// Set up multi-sig wallet
+await aniki.setupMultiSig({
+  signers: [
+    '0x123...abc',  // Admin 1
+    '0x456...def',  // Admin 2  
+    '0x789...xyz'   // Admin 3
+  ],
+  threshold: 2,  // 2-of-3 signatures required
+  minAmount: 25000,  // Minimum for multi-sig
+  timelock: 3600     // 1 hour timelock for safety
+});</code></pre>
+
+                <h3>Fraud Detection Engine</h3>
+                <pre><code class="language-typescript">// Enable AI-powered fraud detection
+await aniki.enableFraudDetection({
+  models: ['pattern-analysis', 'velocity-check', 'recipient-scoring'],
+  thresholds: {
+    suspiciousScore: 0.7,
+    blockingScore: 0.9
+  },
+  monitoring: {
+    realTime: true,
+    alertWebhook: 'https://alerts.mycompany.com/fraud',
+    emailAlerts: ['security@mycompany.com']
+  }
+});</code></pre>
+
+                <h2 id="api-reference">API Reference</h2>
+
+                <h3>Core Classes</h3>
+
+                <h4>Aniki</h4>
+                <p>Main class for treasury management system.</p>
+
+                <pre><code class="language-typescript">class Aniki {
+  constructor(config: AnikiConfig)
+  
+  async initialize(securityConfig: SecurityConfig): Promise&lt;void&gt;
+  async spawnAgent(agentConfig: AgentConfig): Promise&lt;Agent&gt;
+  async getBalance(wallet?: string): Promise&lt;number&gt;
+  async createTransaction(tx: TransactionConfig): Promise&lt;Transaction&gt;
+  async enableFraudDetection(config: FraudConfig): Promise&lt;void&gt;
+}</code></pre>
+
+                <h4>Agent</h4>
+                <p>Autonomous agent for executing treasury tasks.</p>
+
+                <pre><code class="language-typescript">class Agent {
+  readonly id: string
+  readonly budget: number
+  readonly securityLevel: SecurityLevel
+  
+  async execute(task: Task): Promise&lt;TaskResult&gt;
+  async requestApproval(amount: number): Promise&lt;boolean&gt;
+  async terminate(): Promise&lt;void&gt;
+}</code></pre>
+
+                <h2 id="examples">Examples</h2>
+
+                <h3>DeFi Portfolio Management</h3>
+                <pre><code class="language-typescript">// Create agent for DeFi operations
+const defiAgent = await aniki.spawnAgent({
+  name: 'DeFi Manager',
+  task: 'automated-portfolio-rebalancing',
+  budget: 100000,
+  parameters: {
+    protocols: ['cetus', 'aftermath', 'kriya'],
+    riskLevel: 'moderate',
+    rebalanceThreshold: 0.05,
+    maxSlippage: 0.01
+  },
+  schedule: {
+    type: 'interval',
+    frequency: '4h'
+  }
+});
+
+// Monitor agent performance
+setInterval(async () => {
+  const status = await defiAgent.getStatus();
+  console.log(`Portfolio value: ${status.portfolioValue} SUI`);
+  console.log(`24h performance: ${status.performance24h}%`);
+}, 60000);</code></pre>
+
+                <h3>Security Monitoring Agent</h3>
+                <pre><code class="language-typescript">// Deploy security monitoring
+const securityAgent = await aniki.spawnAgent({
+  name: 'Security Monitor',
+  task: 'continuous-threat-detection',
+  budget: 5000,  // Minimal budget for monitoring
+  parameters: {
+    scanInterval: 30000,
+    threatModels: ['unusual-patterns', 'known-attackers'],
+    autoResponse: {
+      suspicious: 'alert',
+      confirmed: 'lockdown'
+    }
+  }
+});
+
+// Handle security events
+securityAgent.on('threat-detected', async (threat) => {
+  if (threat.severity === 'high') {
+    await aniki.emergencyLockdown();
+    await notifySecurityTeam(threat);
+  }
+});</code></pre>
+
+                <h2 id="deployment">Deployment</h2>
+
+                <h3>Production Deployment</h3>
+
+                <div class="alert warning">
+                    <strong>Security Note:</strong> Never deploy to production without proper security review and testing.
+                </div>
+
+                <pre><code class="language-bash"># Production deployment script
+npm run build
+npm run test:security
+npm run deploy:mainnet
+
+# Verify deployment
+npm run verify:contracts
+npm run test:integration</code></pre>
+
+                <h3>Docker Deployment</h3>
+                <pre><code class="language-dockerfile"># Dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY dist/ ./dist/
+EXPOSE 3000
+CMD ["npm", "start"]</code></pre>
+
+                <pre><code class="language-yaml"># docker-compose.yml
+version: '3.8'
+services:
+  aniki:
+    build: .
+    environment:
+      - NETWORK=mainnet
+      - SECURITY_LEVEL=enterprise
+    volumes:
+      - ./config:/app/config:ro
+      - ./logs:/app/logs
+    restart: unless-stopped</code></pre>
+
+                <h2 id="troubleshooting">Troubleshooting</h2>
+
+                <h3>Common Issues</h3>
+
+                <h4>Connection Issues</h4>
+                <div class="alert error">
+                    <strong>Error:</strong> Failed to connect to Sui RPC endpoint
+                </div>
+                <p><strong>Solution:</strong> Check network configuration and RPC endpoint availability:</p>
+                <pre><code class="language-bash"># Test RPC connectivity
+curl -X POST https://fullnode.devnet.sui.io \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"sui_getLatestSuiSystemState"}'</code></pre>
+
+                <h4>Gas Estimation Failures</h4>
+                <div class="alert warning">
+                    <strong>Warning:</strong> Transaction gas estimation failed
+                </div>
+                <p><strong>Solution:</strong> Enable gas optimization or increase gas budget:</p>
+                <pre><code class="language-typescript">// Increase gas budget for complex operations
+const tx = await aniki.createTransaction({
+  to: '0x...',
+  amount: 1000,
+  gasOptions: {
+    budget: 10000000,  // 0.01 SUI
+    price: 1000        // Increased gas price
+  }
+});</code></pre>
+
+                <h3>Performance Optimization</h3>
+
+                <h4>Transaction Batching</h4>
+                <pre><code class="language-typescript">// Enable transaction batching for efficiency
+await aniki.configure({
+  batching: {
+    enabled: true,
+    maxBatchSize: 100,
+    maxWaitTime: 5000,
+    strategy: 'time-or-size'
+  }
+});</code></pre>
+
+                <h2 id="contributing">Contributing</h2>
+
+                <p>We welcome contributions to Aniki! This is an active hackathon project with tight deadlines.</p>
+
+                <h3>Development Setup</h3>
+                <pre><code class="language-bash"># Fork and clone the repository
+git clone https://github.com/your-username/aniki.git
+cd aniki
+
+# Install dependencies
+npm install
+
+# Run tests
+npm test
+
+# Start development server
+npm run dev</code></pre>
+
+                <h3>Contribution Guidelines</h3>
+                <ul>
+                    <li><strong>Security First:</strong> All PRs must pass security review</li>
+                    <li><strong>Test Coverage:</strong> Maintain 80%+ test coverage</li>
+                    <li><strong>Documentation:</strong> Update docs for new features</li>
+                    <li><strong>Performance:</strong> Consider gas optimization impact</li>
+                </ul>
+
+                <h3>Code Style</h3>
+                <pre><code class="language-bash"># Run linting and formatting
+npm run lint
+npm run format
+
+# Type checking
+npm run typecheck</code></pre>
+
+                <div class="alert success">
+                    <strong>Hackathon Contributors:</strong> Fast-track review for quality contributions during hackathon period (Feb 7-11, 2026).
+                </div>
+
+                <h3>Support</h3>
+                <p>Need help? Reach out through:</p>
+                <ul>
+                    <li><strong>GitHub Issues:</strong> <a href="https://github.com/your-username/aniki/issues">Technical questions and bug reports</a></li>
+                    <li><strong>Discord:</strong> Join the Sui developer community</li>
+                    <li><strong>Email:</strong> team@aniki-sui.dev</li>
+                </ul>
+
+                <hr style="margin: 3rem 0; border: 1px solid var(--border);">
+
+                <p style="text-align: center; color: var(--text-muted);">
+                    <strong>Aniki v0.1.0</strong> | Built for OpenClaw Hackathon 2026<br>
+                    <a href="https://github.com/your-username/aniki">GitHub Repository</a> | 
+                    <a href="index.html">Back to Homepage</a>
+                </p>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Update active sidebar link
+                    document.querySelectorAll('.sidebar a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Update active link based on scroll position
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('[id]');
+            const scrollPosition = window.scrollY + 100;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    document.querySelectorAll('.sidebar a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    
+                    const activeLink = document.querySelector(`.sidebar a[href="#${sectionId}"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('active');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

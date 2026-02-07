@@ -1,0 +1,29 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://aniki.sui.dev/sitemap.xml
+
+# Allow crawling of all main content
+Allow: /index.html
+Allow: /docs.html
+Allow: /assets/
+Allow: /demo.js
+
+# Crawl delay for respectful scraping
+Crawl-delay: 1
+
+# Block any potential admin or private areas
+Disallow: /private/
+Disallow: /.git/
+Disallow: /node_modules/
+
+# Allow social media crawlers
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /

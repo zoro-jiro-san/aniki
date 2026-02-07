@@ -1,0 +1,26 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="32" fill="url(#gradient)"/>
+  
+  <!-- Shield icon representing security -->
+  <path d="M32 8L44 16V28C44 36.8366 38.6274 45.2632 32 48C25.3726 45.2632 20 36.8366 20 28V16L32 8Z" fill="white" opacity="0.9"/>
+  
+  <!-- Inner shield details -->
+  <path d="M32 12L40 18V28C40 35.2 35.6 42 32 44C28.4 42 24 35.2 24 28V18L32 12Z" fill="#0277BD"/>
+  
+  <!-- AI/Agent symbol - stylized "A" -->
+  <path d="M32 20L36 32H34L33 29H31L30 32H28L32 20Z" fill="white"/>
+  <rect x="30.5" y="25" width="3" height="1" fill="white"/>
+  
+  <!-- Security dots -->
+  <circle cx="28" cy="36" r="1" fill="white" opacity="0.8"/>
+  <circle cx="32" cy="36" r="1" fill="white" opacity="0.8"/>
+  <circle cx="36" cy="36" r="1" fill="white" opacity="0.8"/>
+  
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4FC3F7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#29B6F6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+</svg>

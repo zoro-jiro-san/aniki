@@ -1,0 +1,43 @@
+# GitHub Pages Configuration for Aniki Landing Page
+title: "Aniki - Autonomous Agent Treasury Management on Sui"
+description: "Enterprise-grade autonomous agent treasury management system built on Sui blockchain with air-gap security, multi-signature support, and AI-powered fraud detection."
+
+# Theme
+remote_theme: pages-themes/minimal@v0.2.0
+
+# URL Configuration
+url: "https://your-username.github.io"
+baseurl: "/aniki"
+
+# Author Information
+author:
+  name: "OpenClaw Development Team"
+  email: "team@aniki-sui.dev"
+
+# SEO
+plugins:
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Markdown
+markdown: kramdown
+highlighter: rouge
+
+# Social Links
+social:
+  github: "your-username/aniki"
+  twitter: "aniki_sui"
+
+# Custom Variables
+aniki:
+  version: "0.1.0"
+  hackathon: "OpenClaw Hackathon 2026"
+  deadline: "February 11, 2026"
+  
+# Exclude files from processing
+exclude:
+  - node_modules/
+  - "*.json"
+  - "*.lock"
+  - README.md
+  - HACKATHON.md

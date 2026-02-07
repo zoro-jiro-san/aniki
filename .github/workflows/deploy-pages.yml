@@ -1,0 +1,144 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Build and test the project
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          
+      - name: Run tests
+        run: |
+          npm test
+          
+      - name: Build project
+        run: |
+          npm run build
+          
+      - name: Validate HTML
+        run: |
+          # Install HTML5 validator
+          npm install -g html5-validator
+          # Validate main pages
+          html5-validator --root docs/ --ignore="Warning: Consider using the h1 element as a top-level heading only"
+          
+      - name: Check for security vulnerabilities
+        run: |
+          npm audit --audit-level=moderate
+          
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Build with Jekyll (if needed)
+        run: |
+          # No Jekyll build needed for static HTML
+          echo "Static HTML site, no build required"
+          
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs/
+
+  # Deploy to GitHub Pages
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        
+  # Performance and accessibility testing
+  lighthouse:
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.12.x
+        
+      - name: Run Lighthouse CI
+        run: |
+          lhci autorun --upload.target=temporary-public-storage
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+  # Security scanning
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # Moltbook notification (when deployed)
+  notify:
+    runs-on: ubuntu-latest
+    needs: [deploy, lighthouse]
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    steps:
+      - name: Notify Sui community
+        run: |
+          echo "🚀 Aniki landing page deployed successfully!"
+          echo "🌐 Live URL: https://aniki.sui.dev"
+          echo "📚 Docs: https://aniki.sui.dev/docs.html" 
+          echo "🛡️ Security: Enterprise-grade protection"
+          echo "🔗 GitHub: https://github.com/${{ github.repository }}"
+          echo ""
+          echo "Ready for Moltbook posting to Sui channel! 🎯"
