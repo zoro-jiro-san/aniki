@@ -37,7 +37,6 @@ describe('Aniki Core', () => {
     jest.spyOn(aniki as any, 'initializeSecure').mockResolvedValue(undefined);
     jest.spyOn(aniki as any, 'spawnSecureAgent').mockResolvedValue({
       success: true,
-      taskId: 'test-task-123',
       tokensUsed: 1000,
       suiSpent: 100,
       securityLevel: 'high'
@@ -52,7 +51,7 @@ describe('Aniki Core', () => {
     });
 
     expect(result.success).toBe(true);
-    expect(result.taskId).toBe('test-task-123');
+    expect(result.tokensUsed).toBe(1000);
   });
 
   test('should handle emergency stop', async () => {
