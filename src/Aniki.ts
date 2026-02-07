@@ -119,10 +119,18 @@ export class Aniki {
       
       // Log completion
       console.log(`✅ Agent task completed successfully`);
-      console.log(`📊 Tokens Used: ${result.tokensUsed}`);
-      console.log(`💸 SUI Spent: ${result.suiSpent}`);
+      console.log(`📊 Tokens Used: ${result.totalTokensUsed}`);
+      console.log(`💸 SUI Spent: ${result.totalSuiSpent}`);
       
-      return result;
+      return {
+        success: result.success,
+        result: result.result,
+        error: result.error,
+        tokensUsed: result.totalTokensUsed,
+        suiSpent: result.totalSuiSpent,
+        securityLevel: this.config.securityLevel,
+        transactionHashes: []
+      };
       
     } catch (error) {
       console.error(`❌ Agent task failed:`, error);

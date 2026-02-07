@@ -1,17 +1,19 @@
-export { Aniki } from './Aniki';
+// Import types and classes
+import { Aniki } from './Aniki';
+import type { AnikiConfig, SecurityConfig, AgentTask, AgentResult } from './Aniki';
+
+// Re-export everything
+export { Aniki, type AnikiConfig, type SecurityConfig, type AgentTask, type AgentResult } from './Aniki';
 export { SuiManager } from './sui/SuiManager';
 export { SecurityManager } from './security/SecurityManager';
 export { TreasuryManager } from './core/TreasuryManager';
 export { AgentOrchestrator } from './core/AgentOrchestrator';
 
-// Types
-export type { AnikiConfig, SecurityConfig, AgentTask, AgentResult } from './Aniki';
-
 // Version
 export const VERSION = '0.1.0';
 
 // Default configurations
-export const DEFAULT_CONFIG = {
+export const DEFAULT_CONFIG: AnikiConfig = {
   network: 'devnet' as const,
   securityLevel: 'high' as const,
   multiSig: true,
@@ -49,8 +51,8 @@ export const NETWORK_CONFIGS = {
 /**
  * Quick start function for easy initialization
  */
-export function createAniki(config?: Partial<AnikiConfig>) {
-  const finalConfig = {
+export function createAniki(config?: Partial<AnikiConfig>): Aniki {
+  const finalConfig: AnikiConfig = {
     ...DEFAULT_CONFIG,
     ...config
   };

@@ -33,10 +33,10 @@ async function runDemo() {
       ]
     });
 
-    // Mock wallet addresses for demo
+    // Mock wallet addresses for demo (proper Sui address format - 0x + 64 hex chars)
     const securityConfig = createSecurityConfig(
-      '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef12', // Cold wallet
-      '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab', // Hot wallet
+      '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef', // Cold wallet
+      '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef123456789a', // Hot wallet
       {
         coldThreshold: 100000,  // 100K SUI
         hotThreshold: 10000,    // 10K SUI
@@ -138,11 +138,9 @@ async function runDemo() {
 
     console.log('Agent Execution Results:');
     console.log(`  Success: ${agentResult1.success ? '✅' : '❌'}`);
-    console.log(`  Task ID: ${agentResult1.taskId}`);
-    console.log(`  Execution Time: ${agentResult1.executionTime}ms`);
     console.log(`  Tokens Used: ${agentResult1.tokensUsed}`);
     console.log(`  SUI Spent: ${formatSuiAmount(agentResult1.suiSpent)}`);
-    console.log(`  Success Rate: ${(agentResult1.successRate * 100).toFixed(1)}%`);
+    console.log(`  Security Level: ${agentResult1.securityLevel}`);
     console.log('');
 
     console.log('Spawning second agent for security monitoring...');
@@ -156,7 +154,6 @@ async function runDemo() {
 
     console.log('Security Agent Results:');
     console.log(`  Success: ${agentResult2.success ? '✅' : '❌'}`);
-    console.log(`  Task ID: ${agentResult2.taskId}`);
     console.log(`  Security Level: ${agentResult2.securityLevel}`);
     console.log(`  SUI Spent: ${formatSuiAmount(agentResult2.suiSpent)}`);
     console.log('');

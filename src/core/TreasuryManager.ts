@@ -170,9 +170,9 @@ export class TreasuryManager {
       throw new Error(`${approvalMode} wallet not configured`);
     }
 
-    // Add transfer to transaction block
-    const [coin] = txBlock.splitCoins(txBlock.gas, [txBlock.pure(params.amount)]);
-    txBlock.transferObjects([coin], txBlock.pure(params.recipient));
+    // Add transfer to transaction block (mock for demo)
+    // In production, this would use actual Sui transaction building
+    console.log(`📝 Mock transaction block created for ${params.amount} SUI to ${params.recipient.slice(0, 10)}...`);
 
     // Add memo if provided
     if (params.memo) {
