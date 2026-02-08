@@ -4,6 +4,7 @@ import { SecurityManager } from './security/SecurityManager';
 import { AgentOrchestrator } from './core/AgentOrchestrator';
 import { TreasuryManager } from './core/TreasuryManager';
 import { SuiManager } from './sui/SuiManager';
+import { JanitorService } from './core/JanitorService';
 
 export interface AnikiConfig {
   network: 'mainnet' | 'testnet' | 'devnet' | 'localnet';
@@ -50,14 +51,21 @@ export class Aniki {
   private agentOrchestrator: AgentOrchestrator;
   private treasuryManager: TreasuryManager;
   private suiManager: SuiManager;
+  private janitorService: JanitorService;
   private initialized: boolean = false;
 
   constructor(config: AnikiConfig) {
     this.config = config;
     this.suiManager = new SuiManager(config);
     this.securityManager = new SecurityManager(config);
+    this.janitorService = new JanitorService({
+      maxMemoryUsage: 512,
+      compressionEnabled: true,
+      gcInterval: 300000, // 5 minutes
+      cacheMaxSize: config.securityLevel === 'high' ? 128 : 64 // More cache for high security
+    });
     this.treasuryManager = new TreasuryManager(this.suiManager, this.securityManager);
-    this.agentOrchestrator = new AgentOrchestrator(this.treasuryManager, this.securityManager);
+    this.agentOrchestrator = new AgentOrchestrator(this.treasuryManager, this.securityManager, this.janitorService);
   }
 
   /**
@@ -72,6 +80,9 @@ export class Aniki {
       
       // Setup security layer
       await this.securityManager.initialize(securityConfig);
+      
+      // Initialize janitor service for memory management
+      await this.janitorService.initialize();
       
       // Initialize treasury with security constraints
       await this.treasuryManager.initialize(securityConfig);
@@ -156,6 +167,7 @@ export class Aniki {
     const treasuryStatus = await this.treasuryManager.getStatus();
     const securityStatus = await this.securityManager.getStatus();
     const agentStatus = this.agentOrchestrator.getStatus();
+    const janitorStatus = this.janitorService.getStatus();
 
     return {
       initialized: true,
@@ -164,7 +176,8 @@ export class Aniki {
       sui: suiStatus,
       treasury: treasuryStatus,
       security: securityStatus,
-      agents: agentStatus
+      agents: agentStatus,
+      janitor: janitorStatus
     };
   }
 
@@ -177,6 +190,9 @@ export class Aniki {
     try {
       // Stop all agents
       await this.agentOrchestrator.stopAllAgents();
+      
+      // Emergency cleanup to free resources
+      await this.janitorService.emergencyCleanup();
       
       // Secure treasury
       await this.treasuryManager.emergencySecure();
@@ -270,14 +286,124 @@ export class Aniki {
   }> {
     const status = await this.getStatus();
     
-    // Health assessment logic
+    // Health assessment logic including memory status
+    const memoryOK = parseFloat(status.janitor.memory.percentage) < 80;
     const isHealthy = status.sui.connected && 
                      status.treasury.balance > 1000 && 
-                     status.security.level === this.config.securityLevel;
+                     status.security.level === this.config.securityLevel &&
+                     memoryOK;
+
+    const isWarning = !memoryOK || parseFloat(status.janitor.memory.percentage) > 60;
 
     return {
-      status: isHealthy ? 'healthy' : 'warning',
+      status: isHealthy ? 'healthy' : (isWarning ? 'warning' : 'critical'),
       metrics: status
     };
+  }
+
+  /**
+   * 🧹 JANITOR FEATURES - Memory Management & Optimization
+   */
+
+  /**
+   * Perform manual system cleanup
+   */
+  async performCleanup(): Promise<any> {
+    console.log('🧹 Manual cleanup initiated...');
+    return await this.janitorService.performCleanup();
+  }
+
+  /**
+   * Get memory optimization recommendations
+   */
+  getOptimizationRecommendations(): string[] {
+    return this.janitorService.getMemoryOptimizationRecommendations();
+  }
+
+  /**
+   * Cache token data for performance optimization
+   */
+  async cacheTokens(key: string, tokenData: any, ttlMs: number = 3600000): Promise<void> {
+    await this.janitorService.cacheTokenData(key, tokenData, ttlMs);
+  }
+
+  /**
+   * Retrieve cached token data
+   */
+  async getCachedTokens(key: string): Promise<any | null> {
+    return await this.janitorService.getCachedTokenData(key);
+  }
+
+  /**
+   * Get comprehensive janitor status and metrics
+   */
+  getJanitorStatus(): any {
+    return this.janitorService.getStatus();
+  }
+
+  /**
+   * Enable automatic memory management with custom settings
+   */
+  configureJanitor(config: {
+    maxMemoryMB?: number;
+    cleanupIntervalMs?: number;
+    enableCompression?: boolean;
+    cacheMaxSizeMB?: number;
+  }): void {
+    console.log('⚙️ Configuring Janitor with custom settings:', config);
+    // Update janitor configuration
+    Object.assign(this.janitorService['config'], {
+      maxMemoryUsage: config.maxMemoryMB || this.janitorService['config'].maxMemoryUsage,
+      gcInterval: config.cleanupIntervalMs || this.janitorService['config'].gcInterval,
+      compressionEnabled: config.enableCompression ?? this.janitorService['config'].compressionEnabled,
+      cacheMaxSize: config.cacheMaxSizeMB || this.janitorService['config'].cacheMaxSize
+    });
+  }
+
+  /**
+   * Force immediate garbage collection and cleanup
+   */
+  async optimizeMemory(): Promise<{
+    before: string;
+    after: string;
+    freed: string;
+    recommendations: string[];
+  }> {
+    const beforeMemory = process.memoryUsage();
+    const beforeMB = (beforeMemory.heapUsed / 1024 / 1024).toFixed(2);
+
+    console.log('🚀 Optimizing memory usage...');
+    
+    // Perform cleanup
+    const result = await this.janitorService.performCleanup();
+    
+    const afterMemory = process.memoryUsage();
+    const afterMB = (afterMemory.heapUsed / 1024 / 1024).toFixed(2);
+    const freedMB = (result.memoryFreed / 1024 / 1024).toFixed(2);
+
+    const optimization = {
+      before: beforeMB + ' MB',
+      after: afterMB + ' MB',
+      freed: freedMB + ' MB',
+      recommendations: this.janitorService.getMemoryOptimizationRecommendations()
+    };
+
+    console.log('✅ Memory optimization completed:', optimization);
+    return optimization;
+  }
+
+  /**
+   * Get cache performance statistics
+   */
+  getCacheStats(): any {
+    return this.janitorService.getStatus().cache;
+  }
+
+  /**
+   * Emergency memory cleanup when system is under stress
+   */
+  async emergencyMemoryCleanup(): Promise<void> {
+    console.log('🚨 Emergency memory cleanup initiated');
+    await this.janitorService.emergencyCleanup();
   }
 }

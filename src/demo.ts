@@ -218,8 +218,61 @@ async function runDemo() {
     console.log('// await aniki.emergencyStop("Suspicious activity detected");');
     console.log('');
 
+    // Step 10: Janitor Service Demo (NEW FEATURE)
+    console.log('🧹 Step 10: Janitor Service - Memory Management & Optimization');
+    console.log('');
+
+    console.log('Demonstrating intelligent memory management...');
+    
+    // Show current memory status
+    console.log('📊 Checking current system memory usage...');
+    const janitorStatus = aniki.getJanitorStatus();
+    console.log(`  Memory Usage: ${janitorStatus.memory.heapUsed}`);
+    console.log(`  Cache Hit Rate: ${janitorStatus.cache.tokenCache.hitRate * 100}%`);
+    console.log(`  Active Sessions: ${janitorStatus.cache.sessionCache.entries}`);
+    console.log('');
+
+    // Get optimization recommendations
+    console.log('💡 Getting optimization recommendations...');
+    const recommendations = aniki.getOptimizationRecommendations();
+    recommendations.forEach(rec => console.log(`  ${rec}`));
+    console.log('');
+
+    // Perform cache demo
+    console.log('📦 Demonstrating intelligent token caching...');
+    await aniki.cacheTokens('demo_token_1', { 
+      balance: 1000000, 
+      metadata: { name: 'Demo Token', symbol: 'DEMO' },
+      timestamp: Date.now()
+    });
+    console.log('  ✅ Token data cached with compression');
+    
+    const cachedData = await aniki.getCachedTokens('demo_token_1');
+    if (cachedData) {
+      console.log('  ✅ Cache hit successful - data retrieved instantly');
+    }
+    console.log('');
+
+    // Perform memory optimization
+    console.log('🚀 Performing intelligent memory optimization...');
+    const optimization = await aniki.optimizeMemory();
+    console.log(`  Memory before: ${optimization.before}`);
+    console.log(`  Memory after: ${optimization.after}`);
+    console.log(`  Memory freed: ${optimization.freed}`);
+    console.log('  ✅ System optimized automatically');
+    console.log('');
+
+    // Show final cache statistics
+    console.log('📈 Final cache performance metrics:');
+    const cacheStats = aniki.getCacheStats();
+    console.log(`  Token cache entries: ${cacheStats.tokenCache.entries}`);
+    console.log(`  Cache size: ${cacheStats.tokenCache.sizeKB} KB`);
+    console.log(`  Hit rate: ${(cacheStats.tokenCache.hitRate * 100).toFixed(1)}%`);
+    console.log(`  Compression: ${cacheStats.compression.enabled ? 'Enabled' : 'Disabled'}`);
+    console.log('');
+
     // Final status
-    console.log('🎯 Step 10: Final Status Report');
+    console.log('🎯 Step 11: Final Status Report');
     console.log('');
 
     const finalStatus = await aniki.getStatus();
@@ -236,6 +289,7 @@ async function runDemo() {
     console.log('✅ SuiNS integration for human-readable addresses');
     console.log('✅ Real-time health monitoring and alerting');
     console.log('✅ Emergency response and fund protection');
+    console.log('✅ 🧹 Janitor Service - Memory management & cache optimization');
     console.log('');
     console.log('Sui Stack Components Used:');
     console.log('🔗 Sui RPC client with automatic failover');

@@ -1,5 +1,6 @@
 import { TreasuryManager } from './TreasuryManager';
 import { SecurityManager } from '../security/SecurityManager';
+import { JanitorService } from './JanitorService';
 
 interface AgentTask {
   id: string;
@@ -76,6 +77,7 @@ interface AgentExecutionResult {
 export class AgentOrchestrator {
   private treasuryManager: TreasuryManager;
   private securityManager: SecurityManager;
+  private janitorService: JanitorService;
   private activeTasks: Map<string, AgentTask> = new Map();
   private activeSubTasks: Map<string, SubTask> = new Map();
   private activeSessions: Map<string, AgentSession> = new Map();
@@ -83,9 +85,10 @@ export class AgentOrchestrator {
   private maxConcurrentTasks: number = 10;
   private taskDecomposer: TaskDecomposer;
 
-  constructor(treasuryManager: TreasuryManager, securityManager: SecurityManager) {
+  constructor(treasuryManager: TreasuryManager, securityManager: SecurityManager, janitorService: JanitorService) {
     this.treasuryManager = treasuryManager;
     this.securityManager = securityManager;
+    this.janitorService = janitorService;
     this.taskDecomposer = new TaskDecomposer();
   }
 
@@ -230,7 +233,12 @@ export class AgentOrchestrator {
       totalTasksProcessed: this.taskHistory.length,
       maxConcurrentTasks: this.maxConcurrentTasks,
       averageExecutionTime: this.calculateAverageExecutionTime(),
-      successRate: this.calculateOverallSuccessRate()
+      successRate: this.calculateOverallSuccessRate(),
+      memoryManagement: {
+        taskHistorySize: this.taskHistory.length,
+        activeDataStructures: this.activeTasks.size + this.activeSubTasks.size + this.activeSessions.size,
+        janitorEnabled: true
+      }
     };
   }
 
@@ -388,6 +396,15 @@ export class AgentOrchestrator {
     };
 
     this.activeSessions.set(session.id, session);
+    
+    // Cache session data for janitor management
+    await this.janitorService.cacheSessionData(session.id, {
+      subTaskName: subTask.name,
+      agentType: session.agentType,
+      startedAt: session.startedAt,
+      allocation: allocation
+    });
+    
     return session;
   }
 
@@ -581,15 +598,21 @@ export class AgentOrchestrator {
   }
 
   /**
-   * Cleanup completed sessions
+   * Cleanup completed sessions with janitor integration
    */
   private cleanupCompletedSessions(): void {
+    let cleanedCount = 0;
     for (const [sessionId, session] of this.activeSessions) {
       if (session.status === 'completed' || session.status === 'failed' || session.status === 'terminated') {
         if (session.completedAt && Date.now() - session.completedAt > 300000) { // 5 minutes
           this.activeSessions.delete(sessionId);
+          cleanedCount++;
         }
       }
+    }
+    
+    if (cleanedCount > 0) {
+      console.log(`🧹 Janitor: Cleaned ${cleanedCount} completed sessions`);
     }
   }
 

@@ -10,6 +10,7 @@
     "test:coverage": "jest --coverage",
     "dev": "ts-node src/index.ts",
     "demo": "ts-node src/demo.ts",
+    "demo:janitor": "ts-node src/demo-janitor.ts",
     "lint": "eslint src/**/*.ts"
   },
   "keywords": [

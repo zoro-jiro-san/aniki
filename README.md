@@ -17,6 +17,13 @@ Aniki (兄貴, meaning "big brother" in Japanese) is an autonomous agent treasur
 
 ### Key Features
 
+🧹 **🌟 Janitor Service - Our Key Innovation**
+- Intelligent memory management with automatic garbage collection
+- Token cache optimization with LRU eviction and compression
+- Predictive cleanup to prevent performance degradation
+- Real-time performance monitoring and optimization recommendations
+- Emergency cleanup protocols for resource-constrained environments
+
 🛡️ **Security-First Design**
 - Air-gapped wallet management with cold storage integration
 - Multi-signature support for high-value transactions  
@@ -45,6 +52,11 @@ Aniki (兄貴, meaning "big brother" in Japanese) is an autonomous agent treasur
 
 ```
 Aniki
+├── 🧹 Janitor Service (NEW!)
+│   ├── Memory Management
+│   ├── Cache Optimization
+│   ├── Performance Monitoring
+│   └── Predictive Cleanup
 ├── Sui Integration Layer
 │   ├── Sui RPC Client (with failover)
 │   ├── Move Contract Interface
@@ -116,6 +128,61 @@ const result = await aniki.spawnSecureAgent({
   securityRequired: true,
   approvalThreshold: 10000
 });
+```
+
+## 🧹 Janitor Service - Memory Management & Optimization
+
+### Automatic Memory Management
+
+```typescript
+// Get current memory status and recommendations
+const janitorStatus = aniki.getJanitorStatus();
+console.log(`Memory usage: ${janitorStatus.memory.heapUsed}`);
+console.log(`Cache hit rate: ${janitorStatus.cache.tokenCache.hitRate}`);
+
+// Get optimization recommendations
+const recommendations = aniki.getOptimizationRecommendations();
+recommendations.forEach(rec => console.log(rec));
+
+// Perform manual optimization
+const result = await aniki.optimizeMemory();
+console.log(`Memory freed: ${result.freed}`);
+```
+
+### Intelligent Token Caching
+
+```typescript
+// Cache token data with automatic compression
+await aniki.cacheTokens('portfolio_data', {
+  tokens: [...], // Large token dataset
+  balances: [...],
+  metadata: [...]
+}, 3600000); // 1 hour TTL
+
+// Retrieve from cache (instant if cached)
+const cachedData = await aniki.getCachedTokens('portfolio_data');
+if (cachedData) {
+  console.log('Cache hit - instant retrieval!');
+}
+
+// View cache performance
+const cacheStats = aniki.getCacheStats();
+console.log(`Hit rate: ${cacheStats.tokenCache.hitRate * 100}%`);
+```
+
+### Performance Monitoring
+
+```typescript
+// Configure janitor for your workload
+aniki.configureJanitor({
+  maxMemoryMB: 1024,        // 1GB memory limit
+  cleanupIntervalMs: 300000, // 5 minutes
+  enableCompression: true,   // Enable compression
+  cacheMaxSizeMB: 128       // 128MB cache limit
+});
+
+// Emergency cleanup if needed
+await aniki.emergencyMemoryCleanup();
 ```
 
 ## Security Features
@@ -264,7 +331,17 @@ const client = aniki.getSuiClient({
 
 **Registration:** [DeepSurge Platform](https://www.deepsurge.xyz/create-account)
 
-## Testing
+## Testing & Demos
+
+### Running Demos
+
+```bash
+npm run demo            # Complete Aniki demo (includes janitor)
+npm run demo:janitor    # Dedicated janitor service demo
+npm run dev             # Development mode
+```
+
+### Running Tests
 
 ```bash
 npm test                # Run all tests
